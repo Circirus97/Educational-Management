@@ -1,6 +1,5 @@
 package com.riwi.educationalManagement.api.dto.request;
 
-import com.riwi.educationalManagement.domain.entities.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
