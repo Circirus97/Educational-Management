@@ -98,6 +98,7 @@ public class CourseService implements ICourseService{
     }
 
     private Course find(Long id) {
-        return this.courseRepository.findById(id).orElseThrow(() -> new BadRequestException((ErrorMessages.IdNotFound("Course"))));
+        return this.courseRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException((ErrorMessages.IdNotFound("Course"))));
     }
 }

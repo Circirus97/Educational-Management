@@ -9,7 +9,6 @@ import com.riwi.educationalManagement.utils.exception.BadRequestException;
 import com.riwi.educationalManagement.utils.message.ErrorMessages;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserService implements IUserService{
 
-    @Autowired
     private final UserRepository userRepository;
 
     @Override
     public UserResponse create(UserRequest request) {
         User user = this.requestToEntity(request);
+
         return this.entityToResponse(this.userRepository.save(user));
     }
 

@@ -17,9 +17,13 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Lob
     private String messageContent;
+
     private LocalDateTime sentDate = LocalDateTime.now();
+
+    private String roleSender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", referencedColumnName = "id")

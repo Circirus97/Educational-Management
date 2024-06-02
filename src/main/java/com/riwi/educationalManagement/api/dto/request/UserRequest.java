@@ -1,17 +1,13 @@
 package com.riwi.educationalManagement.api.dto.request;
 
-import com.riwi.educationalManagement.domain.entities.Course;
-import com.riwi.educationalManagement.domain.entities.Enrollment;
-import com.riwi.educationalManagement.domain.entities.Message;
-import com.riwi.educationalManagement.domain.entities.Submission;
 import com.riwi.educationalManagement.utils.enums.Role;
+import com.riwi.educationalManagement.utils.message.ErrorMessages;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -35,6 +31,7 @@ public class UserRequest {
     @Size(min = 1, max = 100, message = "The full name must have a maximum of 100 characters.")
     private String fullName;
 
+    @NotNull(message = ErrorMessages.RequiredRole)
     private Role role;
 
 

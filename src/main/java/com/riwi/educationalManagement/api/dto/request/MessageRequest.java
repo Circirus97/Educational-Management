@@ -17,8 +17,6 @@ public class MessageRequest {
 
     private Long senderId;
 
-    private String userWhoSentMessage;
-
     private Long receiverId;
 
     private Long courseId;
