@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long>{
 
-    List<Message> findAllByMessageSenderAndMessageReceiver(UserInfoResponse userSender, UserInfoResponse userReceiver);
+    List<Message> findAllByMessageSenderAndMessageReceiver(User userSender, User userReceiver);
 }

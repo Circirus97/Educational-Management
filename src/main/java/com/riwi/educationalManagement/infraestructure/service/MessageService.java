@@ -114,10 +114,16 @@ public class MessageService implements IMessageService {
                         .userReceiver(UserInfoResponse.builder()
                                 .id(message.getMessageReceiver().getId())
                                 .fullName(message.getMessageReceiver().getFullName())
+                                .email(message.getMessageReceiver().getEmail())
+                                .role(message.getMessageReceiver().getRole())
+                                .username(message.getMessageReceiver().getUsername())
                                 .build())
                         .userSender(UserInfoResponse.builder()
                                 .id(message.getMessageSender().getId())
                                 .fullName(message.getMessageSender().getFullName())
+                                .email(message.getMessageSender().getEmail())
+                                .role(message.getMessageSender().getRole())
+                                .username(message.getMessageSender().getUsername())
                                 .build())
                         .sentDate(message.getSentDate())
                         .build()).toList();
@@ -127,10 +133,10 @@ public class MessageService implements IMessageService {
     public List<MessageResponse> findAllMessageBySenderIdAndReceiverId(Long senderId, Long receiverId) {
 
         return entityToResponseList(messageRepository.findAllByMessageSenderAndMessageReceiver(
-                UserInfoResponse.builder()
+                User.builder()
                         .id(senderId)
                         .build(),
-                UserInfoResponse.builder()
+                User.builder()
                         .id(receiverId)
                         .build()));
 

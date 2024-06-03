@@ -1,8 +1,7 @@
 package com.riwi.educationalManagement.infraestructure.service;
 
 import com.riwi.educationalManagement.api.dto.request.EnrollmentRequest;
-import com.riwi.educationalManagement.api.dto.response.EnrollmentResponse;
-import com.riwi.educationalManagement.api.dto.response.UserInfoResponse;
+import com.riwi.educationalManagement.api.dto.response.*;
 import com.riwi.educationalManagement.domain.entities.Course;
 import com.riwi.educationalManagement.domain.entities.Enrollment;
 import com.riwi.educationalManagement.domain.entities.User;
@@ -19,11 +18,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
 @AllArgsConstructor
-public class EnrollmentService implements IEnrollmentService{
+public class  EnrollmentService implements IEnrollmentService{
 
     private final EnrollmentRepository enrollmentRepository;
 
@@ -58,7 +58,6 @@ public class EnrollmentService implements IEnrollmentService{
 
     @Override
     public EnrollmentResponse update(EnrollmentRequest request, Long id) {
-        Enrollment enrollment = this.find(id);
         Enrollment enrollmentUpdate = this.requestToEntity(request);
         enrollmentUpdate.setId(id);
 
@@ -99,6 +98,71 @@ public class EnrollmentService implements IEnrollmentService{
 
     }
 
+    @Override
+    public UserAndCourseResponse getCoursesByIdUser(Long userId) {
 
+        return entityToUserAndCourseResponse(enrollmentRepository.findAllByUserId(userId));
+    }
+
+    private UserAndCourseResponse entityToUserAndCourseResponse(List<Enrollment> enrollments){
+
+        UserInfoResponse userInfoResponse = enrollments.stream().findAny()
+                .map(enrollment -> UserInfoResponse.builder()
+                        .username(enrollment.getUser().getUsername())
+                        .fullName(enrollment.getUser().getFullName())
+                        .email(enrollment.getUser().getEmail())
+                        .role(enrollment.getUser().getRole())
+                        .id(enrollment.getUser().getId())
+                        .build()).orElse(new UserInfoResponse());
+
+        List<CourseResponse> courseResponses = enrollments.stream()
+                .map(enrollment -> CourseResponse.builder()
+                        .id(enrollment.getCourse().getId())
+                        .courseName(enrollment.getCourse().getCourseName())
+                        .description(enrollment.getCourse().getDescription())
+                        .build()).toList();
+
+        return UserAndCourseResponse.builder()
+                .id(userInfoResponse.getId())
+                .username(userInfoResponse.getUsername())
+                .role(userInfoResponse.getRole())
+                .fullName(userInfoResponse.getFullName())
+                .email(userInfoResponse.getEmail())
+                .courses(courseResponses)
+                .build();
+    }
+
+    @Override
+    public CourseAndUsersResponse getAllUserByCourseId(Long courseId) {
+
+        return entityToCourseAndUsersResponse(enrollmentRepository.findAllByCourseId(courseId));
+    }
+
+    private CourseAndUsersResponse entityToCourseAndUsersResponse(List<Enrollment> enrollments){
+
+        List<UserInfoResponse> userInfoResponse = enrollments.stream()
+                .map(enrollment -> UserInfoResponse.builder()
+                        .username(enrollment.getUser().getUsername())
+                        .fullName(enrollment.getUser().getFullName())
+                        .email(enrollment.getUser().getEmail())
+                        .role(enrollment.getUser().getRole())
+                        .id(enrollment.getUser().getId())
+                        .build()).toList();
+
+        CourseResponse courseResponses = enrollments.stream().findAny()
+                .map(enrollment -> CourseResponse.builder()
+                        .id(enrollment.getCourse().getId())
+                        .courseName(enrollment.getCourse().getCourseName())
+                        .description(enrollment.getCourse().getDescription())
+                        .build()).orElse(new CourseResponse());
+
+        return CourseAndUsersResponse.builder()
+                .id(courseResponses.getId())
+                .courseName(courseResponses.getCourseName())
+                .description(courseResponses.getDescription())
+                .userInfoResponses(userInfoResponse)
+                .build();
+
+    }
 
 }

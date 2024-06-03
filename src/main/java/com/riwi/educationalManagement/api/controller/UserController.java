@@ -1,7 +1,10 @@
 package com.riwi.educationalManagement.api.controller;
 
 import com.riwi.educationalManagement.api.dto.request.UserRequest;
+import com.riwi.educationalManagement.api.dto.response.UserAndCourseResponse;
 import com.riwi.educationalManagement.api.dto.response.UserResponse;
+import com.riwi.educationalManagement.infraestructure.abstract_service.ICourseService;
+import com.riwi.educationalManagement.infraestructure.abstract_service.IEnrollmentService;
 import com.riwi.educationalManagement.infraestructure.abstract_service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/users")
 @AllArgsConstructor
 public class UserController {
     private final IUserService userService;
+    private final IEnrollmentService iEnrollmentService;
 
     @GetMapping
     public ResponseEntity<Page<UserResponse>> getAll(
@@ -41,5 +47,14 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id){
         this.userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/{user_id}/courses")
+    public ResponseEntity<UserAndCourseResponse> getCoursesByIdUser(
+            @Validated
+            @PathVariable(name = "user_id") Long userId
+    ){
+
+        return ResponseEntity.ok(this.iEnrollmentService.getCoursesByIdUser(userId));
     }
 }
